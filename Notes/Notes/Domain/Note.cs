@@ -9,8 +9,7 @@ namespace Notes.Domain
         public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime CreationDate { get; set; } = DateTime.Now;
         public DateTime? DeletedDate { get; set; }
-        public string TitleName { get; set; }
         public string Text { get; set; }
-        public bool Is
+        public bool IsCompleted { get; set; } = false;
     }
 }

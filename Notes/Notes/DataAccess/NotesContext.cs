@@ -17,7 +17,7 @@ namespace Notes.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"DESKTOP-TALUG4B\SQLEXPRESS;Database=GameAd;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=A-104-15;Database=NotesDb;Trusted_Connection=True;");
         }
     }
 }
