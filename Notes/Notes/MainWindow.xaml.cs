@@ -23,36 +23,38 @@ namespace Notes
     public partial class MainWindow : Window
     {
         private List<Note> notes = new List<Note>();
+
         public MainWindow()
         {
             InitializeComponent();
-            using(var context = new NotesContext())
+            using (var context = new NotesContext())
             {
-                notes = context.Notes.Where(x=> x.DeletedDate == null).ToList();
+                notes = context.Notes.Where(x => x.DeletedDate == null).ToList();
             }
             notesDG.ItemsSource = notes;
         }
 
         private void DeleteBtnClick(object sender, RoutedEventArgs e)
         {
-            Delete();
+            var selectedNote = notesDG.SelectedItem as Note;
+            notes.Remove(selectedNote);
+            Task.Run(() => DeleteNote(selectedNote));
+            notesDG.ItemsSource = null;
+            notesDG.ItemsSource = notes;
         }
 
         private void SaveBtnClick(object sender, RoutedEventArgs e)
         {
-            Save();
+            Task.Run(() => Save());
         }
 
-        private Task Delete()
+        private Task DeleteNote(Note note)
         {
             using (var context = new NotesContext())
             {
-                var selectedNote = notesDG.SelectedItem as Note;
-                var noteDb = context.Notes.FirstOrDefault(x => x.Id == selectedNote.Id && x.DeletedDate == null);
+                var noteDb = context.Notes.FirstOrDefault(x => x.Id == note.Id);
                 noteDb.DeletedDate = DateTime.Now;
                 context.Update(noteDb);
-                notes = context.Notes.Where(x => x.DeletedDate == null).ToList();
-                notesDG.ItemsSource = notes;
                 context.SaveChanges();
             }
             return Task.CompletedTask;
